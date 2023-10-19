@@ -5,14 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - "./www:/var/www/html"
+      - ./site:/var/www/html
     ports:
       - 80:80
       - 443:443
     depends_on:
       - mysql
   mysql:
-    image: mysql:latest
+    image: mariadb:lts
     environment:
       MYSQL_ROOT_PASSWORD: 195495b
       MYSQL_DATABASE: mydatabase
@@ -20,5 +20,19 @@ services:
       MYSQL_PASSWORD: 195495
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+  
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8980:80
+    environment:
+      - PMA_ARBITRARY=1
+    depends_on:
+      - mysql
+
+
 volumes:
   mysql_data:
